@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Une question importante</title>
+<meta name="robots" content="noindex,nofollow">
+<meta property="og:title" content="Une question importante">
+<meta property="og:description" content="Réponse attendue. Il n'y a qu'une seule bonne réponse 😉">
+<meta property="og:image" content="https://davidzeke33.github.io/une-question/apercu.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FAF6EE">
+<link rel="icon" href="bretzel.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#FAF6EE;--ink:#2A2420;--soft:#7A6D63;--accent:#8C2A38;--rule:#D9CCBB}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);overflow:hidden;touch-action:manipulation}
+  body{font-family:"Cormorant Garamond",Georgia,serif;-webkit-user-select:none;user-select:none}
+  body::before{content:"";position:fixed;inset:12px;border:1px solid var(--rule);pointer-events:none}
+  body::after{content:"";position:fixed;inset:17px;border:.5px solid var(--rule);pointer-events:none}
+
+  .scene{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;text-align:center}
+  .logo{width:64px;height:64px;animation:bob 3.2s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-6px) rotate(-6deg)}}
+  .hello{font-family:Caveat,cursive;font-size:30px;color:var(--accent);margin:18px 0 2px}
+  h1{font-weight:700;font-size:clamp(34px,10vw,56px);line-height:1.04;margin:0 0 10px;letter-spacing:.01em}
+  .hint{font-style:italic;color:var(--soft);font-size:18px;margin:0 0 34px;min-height:1.2em;transition:opacity .3s}
+
+  .choix{display:flex;gap:18px;align-items:center;justify-content:center;min-height:64px}
+  button{font:inherit;cursor:pointer;border-radius:999px;border:0;outline:none}
+  #oui{background:var(--accent);color:#fff;font-weight:700;font-size:22px;padding:14px 38px;box-shadow:0 6px 18px rgba(140,42,56,.28);transition:transform .25s ease,box-shadow .25s ease}
+  #oui:active{transform:scale(.97)}
+  #non{background:transparent;color:var(--ink);border:1.5px solid var(--ink);font-size:20px;padding:12px 30px;white-space:nowrap;transition:left .22s ease,top .22s ease,transform .22s ease,opacity .4s ease}
+  #non.fuite{position:fixed;z-index:5;margin:0}
+  #non.parti{opacity:0;transform:scale(.2) rotate(30deg);pointer-events:none}
+  .note{position:fixed;left:0;right:0;bottom:44px;font-family:Caveat,cursive;font-size:22px;color:var(--soft);opacity:0;transition:opacity .6s}
+  .note.on{opacity:1}
+
+  .fin{display:none}
+  .fin.on{display:flex;animation:in .6s ease both}
+  @keyframes in{from{opacity:0;transform:translateY(12px)}}
+  .fin h2{font-weight:700;font-size:clamp(32px,9vw,50px);margin:16px 0 8px;line-height:1.05}
+  .fin .mot{font-size:21px;line-height:1.4;max-width:420px;margin:0 auto}
+  .fin .mot p{margin:0 0 14px}
+  .fin .vrai{font-family:Caveat,cursive;font-size:27px;color:var(--accent);line-height:1.2;margin-top:6px}
+  .fin .sign{font-family:Caveat,cursive;font-size:22px;color:var(--soft);margin-top:18px}
+
+  .pluie{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10}
+  .pluie img{position:absolute;top:-60px;will-change:transform;animation:tombe linear forwards}
+  @keyframes tombe{to{transform:translateY(calc(100vh + 120px)) rotate(var(--r))}}
+  @media (prefers-reduced-motion:reduce){.logo{animation:none}}
+</style>
+</head>
+<body>
+
+<main class="scene" id="question">
+  <img class="logo" src="bretzel.svg" alt="">
+  <div class="hello">Gabrielle,</div>
+  <h1>Veux-tu être<br>ma chérie&nbsp;?</h1>
+  <p class="hint" id="hint">Réponds franchement.</p>
+  <div class="choix" id="choix">
+    <button id="oui" type="button">Oui</button>
+    <button id="non" type="button">Non</button>
+  </div>
+  <div class="note" id="note">Le bouton «&nbsp;Non&nbsp;» a démissionné.</div>
+</main>
+
+<main class="scene fin" id="fin" aria-live="polite">
+  <img class="logo" src="bretzel.svg" alt="">
+  <h2>Bonne réponse.</h2>
+  <div class="mot">
+    <p>Je te cache pas que je m'y attendais un peu&nbsp;;)</p>
+    <p>Prochaine étape&nbsp;: un contrat en bonne et due forme. Il arrive sur WhatsApp.</p>
+    <div class="vrai">Et pour arrêter de rigoler deux minutes&nbsp;: je suis vraiment content que ce soit toi ❤️</div>
+    <div class="sign">David, dit le Prétentieux</div>
+  </div>
+</main>
+
+<div class="pluie" id="pluie"></div>
+
+<script>
+(() => {
+  const TOPIC = "dz-f3c096f5c4029e2c";
+  const non = document.getElementById("non");
+  const oui = document.getElementById("oui");
+  const hint = document.getElementById("hint");
+  const note = document.getElementById("note");
+  let essais = 0, fini = false, enFuite = false;
+  const repliques = [
+    "Raté.", "Essaie encore, pour voir.", "Toujours pas.", "T'es têtue, toi.",
+    "Ce bouton est en option.", "Il fait le timide.", "Bon, on arrête ?",
+    "Dernier avertissement.", "Il en a marre de courir."
+  ];
+  const labels = ["Non", "Sûre ?", "Non ?", "Bof", "Hmm", "Vraiment ?", "...", "Pitié", "Bye"];
+  const MAX = repliques.length;
+
+  function fuir(px, py) {
+    if (fini) return;
+    essais++;
+    hint.textContent = repliques[Math.min(essais, MAX) - 1];
+    if (essais >= MAX) { demission(); return; }
+    non.textContent = labels[Math.min(essais, labels.length - 1)];
+    const rNon = non.getBoundingClientRect();
+    if (!enFuite) {
+      non.classList.add("fuite");
+      non.style.left = rNon.left + "px"; non.style.top = rNon.top + "px";
+      enFuite = true; non.offsetWidth;
+    }
+    const w = rNon.width, h = rNon.height, m = 28;
+    const W = innerWidth, H = innerHeight;
+    const rOui = oui.getBoundingClientRect();
+    if (px == null) { px = rNon.left + w / 2; py = rNon.top + h / 2; }
+    let best = null, bestScore = -1;
+    for (let i = 0; i < 40; i++) {
+      const x = m + Math.random() * Math.max(1, W - w - 2 * m);
+      const y = m + Math.random() * Math.max(1, H - h - 2 * m);
+      const cx = x + w / 2, cy = y + h / 2;
+      const dDoigt = Math.hypot(cx - px, cy - py);
+      const chevaucheOui = !(x + w < rOui.left - 16 || x > rOui.right + 16 || y + h < rOui.top - 16 || y > rOui.bottom + 16);
+      if (chevaucheOui) continue;
+      if (dDoigt > bestScore) { bestScore = dDoigt; best = [x, y]; }
+    }
+    if (!best) best = [m, m];
+    non.style.left = best[0] + "px"; non.style.top = best[1] + "px";
+    non.style.transform = "scale(" + Math.max(.62, 1 - essais * .045) + ")";
+    oui.style.transform = "scale(" + Math.min(1.35, 1 + essais * .04) + ")";
+  }
+
+  function demission() {
+    non.classList.add("parti");
+    setTimeout(() => non.remove(), 450);
+    note.classList.add("on");
+    hint.textContent = "Il ne reste plus qu'une option.";
+    oui.style.transform = "scale(1.35)";
+  }
+
+  // Le doigt (ou la souris) ne doit jamais pouvoir cliquer sur Non
+  const bloque = e => { e.preventDefault(); e.stopPropagation(); };
+  non.addEventListener("touchstart", e => { bloque(e); const t = e.touches[0]; fuir(t.clientX, t.clientY); }, { passive: false });
+  non.addEventListener("pointerdown", e => { bloque(e); if (e.pointerType !== "touch") fuir(e.clientX, e.clientY); });
+  non.addEventListener("click", e => { bloque(e); fuir(e.clientX, e.clientY); });
+  non.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { bloque(e); fuir(); } });
+  non.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") fuir(e.clientX, e.clientY); });
+  document.addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse" || fini || !document.body.contains(non)) return;
+    const r = non.getBoundingClientRect();
+    if (Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2)) < 85) fuir(e.clientX, e.clientY);
+  });
+
+  function pluie() {
+    const box = document.getElementById("pluie");
+    const srcs = ["bretzel.svg", "coeur.svg", "coeur.svg"];
+    for (let i = 0; i < 46; i++) {
+      const img = document.createElement("img");
+      img.src = srcs[i % srcs.length];
+      const s = 22 + Math.random() * 30;
+      img.style.width = img.style.height = s + "px";
+      img.style.left = Math.random() * 100 + "vw";
+      img.style.setProperty("--r", (Math.random() * 720 - 360) + "deg");
+      img.style.animationDuration = (2.6 + Math.random() * 2.6) + "s";
+      img.style.animationDelay = (Math.random() * 1.6) + "s";
+      box.appendChild(img);
+    }
+    setTimeout(() => box.innerHTML = "", 7500);
+  }
+
+  function prevenir() {
+    if (/[?&]test\b/.test(location.search)) return;
+    let deja = false;
+    try { deja = localStorage.getItem("oui_envoye") === "1"; } catch (e) {}
+    if (deja) return;
+    const detail = essais === 0 ? "du premier coup, sans même tenter le Non"
+      : essais >= MAX ? "après avoir fait démissionner le bouton Non"
+      : "après " + essais + " tentative" + (essais > 1 ? "s" : "") + " sur le Non";
+    fetch("https://ntfy.sh/" + TOPIC, { method: "POST", body: "🥨❤️ Gabrielle a cliqué OUI, " + detail + "." })
+      .then(() => { try { localStorage.setItem("oui_envoye", "1"); } catch (e) {} })
+      .catch(() => {});
+  }
+
+  oui.addEventListener("click", () => {
+    if (fini) return;
+    fini = true;
+    if (navigator.vibrate) { try { navigator.vibrate([30, 40, 30]); } catch (e) {} }
+    document.getElementById("question").style.display = "none";
+    if (document.body.contains(non)) non.remove();
+    document.getElementById("fin").classList.add("on");
+    pluie();
+    prevenir();
+  });
+})();
+</script>
+</body>
+</html>
