@@ -48,6 +48,10 @@
   .fin .vrai{font-family:Caveat,cursive;font-size:27px;color:var(--accent);line-height:1.2;margin-top:6px}
   .fin .sign{font-family:Caveat,cursive;font-size:22px;color:var(--soft);margin-top:18px}
 
+  .fiche{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:12px 4px;margin:6px auto 18px;text-align:left;max-width:340px}
+  .fiche div{display:flex;justify-content:space-between;gap:14px;padding:5px 0;font-size:20px}
+  .fiche span{font-family:Caveat,cursive;font-size:23px;color:var(--accent);flex:none}
+  .fiche div{text-align:right}
   .pluie{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10}
   .pluie img{position:absolute;top:-60px;will-change:transform;animation:tombe linear forwards}
   @keyframes tombe{to{transform:translateY(calc(100vh + 120px)) rotate(var(--r))}}
@@ -70,11 +74,14 @@
 
 <main class="scene fin" id="fin" aria-live="polite">
   <img class="logo" src="bretzel.svg" alt="">
-  <h2>Bonne réponse.</h2>
+  <h2>Félicitations, tu es embauchée&nbsp;😏</h2>
   <div class="mot">
-    <p>De toute façon, t'avais pas vraiment le choix&nbsp;😏</p>
-    <div class="vrai">Apparemment, t'es de plus en plus claire&nbsp;😉</div>
-    <p style="margin-top:16px">Le contrat arrive sur WhatsApp, prépare ton stylo.</p>
+    <div class="fiche">
+      <div><span>Poste</span>ma chérie</div>
+      <div><span>Contrat</span>CDI, sans possibilité de résiliation</div>
+      <div><span>Période d'essai</span>déjà validée</div>
+    </div>
+    <p>Le service réclamations est fermé définitivement. Le contrat arrive sur WhatsApp pour signature&nbsp;🥨</p>
     <div class="sign">David</div>
   </div>
 </main>
